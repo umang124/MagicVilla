@@ -41,6 +41,10 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<VillaDTO> CreateVilla([FromBody] VillaDTO villaDTO)
         {
+            if (villaDTO == null)
+            {
+                return BadRequest();
+            }
             if (villaDTO.Id > 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -59,7 +63,7 @@ namespace MagicVilla_VillaAPI.Controllers
             return CreatedAtRoute("GetVilla", new {id = villaDTO.Id}, villaDTO);
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteVilla/{id:int}", Name = "DeleteVilla")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -75,6 +79,28 @@ namespace MagicVilla_VillaAPI.Controllers
                 return NotFound();
             }
             VillaStore.villaList.Remove(villa);
+            return NoContent();
+        }
+
+        [HttpPut("UpdateVilla/{id:int}", Name = "UpdateVilla")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public ActionResult UpdateVilla([FromBody] VillaDTO villaDTO)
+        {
+            if (villaDTO == null)
+            {
+                return BadRequest();
+            }
+            var getVilla = VillaStore.villaList.FirstOrDefault(x => x.Id == villaDTO.Id);
+            if (getVilla == null)
+            {
+                return NotFound();
+            }
+
+            getVilla.Name = villaDTO.Name;
+            getVilla.Occupancy = villaDTO.Occupancy;
+            getVilla.Sqft = villaDTO.Sqft;
             return NoContent();
         }
     }
