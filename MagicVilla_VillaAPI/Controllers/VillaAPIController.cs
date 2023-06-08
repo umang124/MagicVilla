@@ -5,6 +5,7 @@ using MagicVilla_VillaAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
@@ -14,17 +15,21 @@ namespace MagicVilla_VillaAPI.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+        protected APIResponse _response;
         public VillaAPIController(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _response = new APIResponse();
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> GetVillas()
-        {           
-            return Ok(await _dbContext.Villas.ToListAsync());
+        {
+            _response.Result = await _dbContext.Villas.ToListAsync();
+            _response.StatusCode = HttpStatusCode.OK;
+            return Ok(_response);
         }
 
         [HttpGet("GetVilla/{id:int}", Name = "GetVilla")]
@@ -34,16 +39,22 @@ namespace MagicVilla_VillaAPI.Controllers
         public async Task<ActionResult> GetVilla(int id)
         {
             if (id == 0)
-            {               
-                return BadRequest();
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
             }
 
             var villa = await _dbContext.Villas.FirstOrDefaultAsync(x => x.Id == id);
             if (villa == null)
             {
-                return NotFound();
+                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.IsSuccess = false;
+                return NotFound(_response);
             }
-            return Ok(villa);
+            _response.StatusCode = HttpStatusCode.OK;
+            _response.Result = villa;
+            return Ok(_response);
         }
 
         [HttpPost]
@@ -54,15 +65,15 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             if (villaCreateDTO == null)
             {
-                return BadRequest();
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
             }
             if (await _dbContext.Villas.AnyAsync(x => x.Name.ToLower() == villaCreateDTO.Name.ToLower()))
             {
                 ModelState.AddModelError("CustomError", "Villa already exists!");
                 return BadRequest(ModelState);
             }
-
-
             Villa model = _mapper.Map<Villa>(villaCreateDTO);
 
             await _dbContext.Villas.AddAsync(model);
