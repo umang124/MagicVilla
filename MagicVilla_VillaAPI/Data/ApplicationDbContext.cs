@@ -12,6 +12,14 @@ namespace MagicVilla_VillaAPI.Data
         public DbSet<Villa> Villas { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<VillaNumber>()
+                .HasOne(x => x.Villa)
+                .WithMany()
+                .HasForeignKey(x => x.VillaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Villa>().HasData(new Villa
             {
                 Id = 1,
