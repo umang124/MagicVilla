@@ -1,9 +1,8 @@
-﻿
-using MagicVilla_Web.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApplication1.Models;
 
-namespace MagicVilla_Web.Controllers
+namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
@@ -23,6 +22,7 @@ namespace MagicVilla_Web.Controllers
         {
             return View();
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
