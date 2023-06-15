@@ -124,7 +124,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 _response.IsSuccess = false;
                 return BadRequest(_response);
             }
-            var getVilla = await _dbContext.Villas.FirstOrDefaultAsync(x => x.Id == villaUpdateDTO.Id);
+            var getVilla = await _dbContext.Villas.AsNoTracking().FirstOrDefaultAsync(x => x.Id == villaUpdateDTO.Id);
             if (getVilla == null)
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
