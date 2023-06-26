@@ -1,4 +1,5 @@
-﻿using MagicVilla_VillaAPI;
+﻿using AutoMapper;
+using MagicVilla_VillaAPI;
 using MagicVilla_VillaAPI.DTOs;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_Web.Services.IServices;
@@ -10,9 +11,11 @@ namespace MagicVilla_Web.Controllers
     public class VillaController : Controller
     {
         private readonly IVillaService _villaService;
-        public VillaController(IVillaService villaService)
+        private readonly IMapper _mapper;
+        public VillaController(IVillaService villaService, IMapper mapper)
         {
             _villaService = villaService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -48,17 +51,51 @@ namespace MagicVilla_Web.Controllers
             }
             return View(model);
         }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateVilla(VillaUpdateDTO model)
+        [HttpGet]
+        public async Task<IActionResult> UpdateVilla(int villaId)
         {
-            return View();
+            var response = await _villaService.GetAsync<APIResponse>(villaId);
+
+            if (response != null && response.IsSuccess)
+            {
+                Villa model = JsonConvert.DeserializeObject<Villa>(Convert.ToString(response.Result));
+                VillaUpdateDTO dto = _mapper.Map<VillaUpdateDTO>(model);
+                return View(dto);
+            }
+            return NotFound();
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteVilla(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateVilla(VillaUpdateDTO dto)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var response = await _villaService.UpdateAsync<APIResponse>(dto);
+                return RedirectToAction(nameof(IndexVilla));
+            }
+            return View(dto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteVilla(int villaId)
+        {
+            var response = await _villaService.GetAsync<APIResponse>(villaId);
+
+            if (response != null && response.IsSuccess)
+            {
+                Villa model = JsonConvert.DeserializeObject<Villa>(Convert.ToString(response.Result));
+                
+                return View(model);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteVilla(Villa model)
+        {
+            var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
+            return RedirectToAction(nameof(IndexVilla));
         }
     }
 }

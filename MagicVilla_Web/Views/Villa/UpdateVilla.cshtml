@@ -1,11 +1,11 @@
 ﻿@using MagicVilla_VillaAPI.DTOs;
-@model VillaCreateDTO
+@model VillaUpdateDTO
 
-<form asp-action="CreateVilla" method="post">
+<form asp-action="UpdateVilla" >
     <div class="container border p-3">
-        <h1 class="text-primary">Create Villa</h1><hr />
+        <h1 class="text-primary">Update Villa</h1><hr />
         <div class="row">
-
+            <input type="hidden" asp-for="Id" />
             <div class="col-2">
                 <label asp-for="Name" class="control-label pt-2" style="font-size: 20px;"></label>
             </div>
@@ -66,7 +66,7 @@
                 <a asp-action="IndexVilla" asp-controller="Villa" class="btn-primary btn form-control">Back to List</a>
             </div>
             <div class="col-5">
-                <button type="submit" class="btn btn-success form-control">Create</button>
+                <button type="submit" class="btn btn-success form-control">Update</button>
             </div>
 
         </div>
