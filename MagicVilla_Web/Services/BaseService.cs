@@ -2,7 +2,6 @@
 using MagicVilla_VillaAPI;
 using MagicVilla_Web.Services.IServices;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
 namespace MagicVilla_Web.Services
@@ -51,7 +50,6 @@ namespace MagicVilla_Web.Services
 
                     HttpResponseMessage apiResponse = await client.SendAsync(message);
                     apiResponse.EnsureSuccessStatusCode();
-                    var x = apiResponse.EnsureSuccessStatusCode();
 
                     var apiContent = await apiResponse.Content.ReadAsStringAsync();
                     var APIResponse = JsonConvert.DeserializeObject<T>(apiContent);
