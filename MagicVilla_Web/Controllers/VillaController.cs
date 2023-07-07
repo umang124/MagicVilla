@@ -32,7 +32,7 @@ namespace MagicVilla_Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateVilla()
+        public ActionResult CreateVilla()
         {
             return View();
         }

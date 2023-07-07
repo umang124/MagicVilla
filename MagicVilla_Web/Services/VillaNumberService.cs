@@ -12,13 +12,13 @@ namespace MagicVilla_Web.Services
             villaUrl = configuration.GetValue<string>("ServiceUrls:VillaAPI") ?? "https://localhost:7001";
         }
 
-        public Task<T> CreateAsync<T>(VillaNumberDTO dto)
+        public Task<T> CreateAsync<T>(VillaNumberCreateDTO dto)
         {
             return SendAsync<T>(new APIRequest
             {
                 ApiType = ApiType.POST,
                 Data = dto,
-                Url = villaUrl + "/api/villanumber"
+                Url = villaUrl + "/api/villanumberapi"
             });
         }
 
@@ -27,7 +27,7 @@ namespace MagicVilla_Web.Services
             return SendAsync<T>(new APIRequest
             {
                 ApiType = ApiType.DELETE,
-                Url = villaUrl + "/api/villanumber/deletevillanumber/" + id
+                Url = villaUrl + "/api/villanumberapi/deletevillanumber/" + id
             });
         }
 
@@ -36,7 +36,7 @@ namespace MagicVilla_Web.Services
             return SendAsync<T>(new APIRequest
             {
                 ApiType = ApiType.GET,
-                Url = villaUrl + "/api/villanumber/"
+                Url = villaUrl + "/api/villanumberapi"
             });
         }
 
@@ -45,7 +45,7 @@ namespace MagicVilla_Web.Services
             return SendAsync<T>(new APIRequest
             {
                 ApiType = ApiType.GET,
-                Url = villaUrl + "/api/villanumber/getvillanumber/" + id
+                Url = villaUrl + "/api/villanumberapi/getvillanumber/" + id
             });
         }
 
@@ -55,7 +55,7 @@ namespace MagicVilla_Web.Services
             {
                 ApiType = ApiType.PUT,
                 Data = dto,
-                Url = villaUrl + "/api/villanumber/updatevillanumber/" + dto.VillaNo
+                Url = villaUrl + "/api/villanumberapi/updatevillanumber/" + dto.VillaNo
             });
         }
     }

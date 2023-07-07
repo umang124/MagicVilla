@@ -1,0 +1,36 @@
+﻿@using MagicVilla_VillaAPI.Models;
+@model List<VillaNumber>;
+
+<div class="container p-4 border">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">VillaNumber List</h1>
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-action="CreateVillaNumber" asp-controller="VillaNumber" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> Create New VillaNumber</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>VillaNo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Villa.Name</td>
+                    <td>@item.VillaNo</td>
+                    <td>
+                        <a asp-action="UpdateVillaNumber" asp-route-villaId="@item.VillaNo" asp-controller="VillaNumber" class="btn btn-outline-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-action="DeleteVillaNumber" asp-route-villaId="@item.VillaNo" asp-controller="VillaNumber" class="btn btn-outline-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

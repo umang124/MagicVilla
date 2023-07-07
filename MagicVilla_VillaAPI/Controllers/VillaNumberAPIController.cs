@@ -10,12 +10,12 @@ namespace MagicVilla_VillaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VillaNumberController : ControllerBase
+    public class VillaNumberAPIController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _dbContext;
         protected APIResponse _response;
-        public VillaNumberController(IMapper mapper, ApplicationDbContext dbContext)
+        public VillaNumberAPIController(IMapper mapper, ApplicationDbContext dbContext)
         {
             _mapper = mapper;
             _dbContext = dbContext;
@@ -26,7 +26,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetVillaNumbers()
         {
-            return Ok(await _dbContext.VillaNumber.ToListAsync());
+            return Ok(await _dbContext.VillaNumber.Include(x => x.Villa).ToListAsync());
         }
 
         [HttpGet("GetVillaNumber/{id:int}", Name = "GetVillaNumber")]
@@ -48,7 +48,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateVillaNumber([FromBody] VillaNumberDTO villaNumber)
+        public async Task<IActionResult> CreateVillaNumber([FromBody] VillaNumberCreateDTO villaNumber)
         {
             if (villaNumber.VillaNo == 0)
             {
